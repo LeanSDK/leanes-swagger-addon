@@ -1,7 +1,7 @@
-LeanES
+leanes-swagger-addon
 ================================
 
-LeanES is a MVC framework for creating graceful applications.
+LeanES addon for define Swagger/OpenAPI documentation.
 
 ## CoffeeScript code guidelines
 [google document](https://docs.google.com/a/saifas.com/document/d/114zNDimqXbdF76nnKBUqDfZoKd7xn6c7V14Fb7jOlk0/edit?usp=sharing)
