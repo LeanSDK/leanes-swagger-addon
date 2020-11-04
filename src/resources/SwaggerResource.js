@@ -21,7 +21,7 @@ import mediaTyper from 'media-typer';
 import pathToRegexp from 'path-to-regexp';
 import joiToJsonSchema from 'joi-to-json-schema';
 
-import { inject } from "inversify";
+import { inject } from 'inversify';
 
 import type { RouterInterface } from '@leansdk/leanes-restful-addon/src';
 import type { SwaggerGatewayInterface } from '../interfaces/SwaggerGatewayInterface';
