@@ -16,7 +16,7 @@ describe('Endpoint', () => {
       class Test extends LeanES {
         @nameBy static __filename = 'Test';
         @meta static object = {};
-        @constant ROOT = `${__dirname}/config/lib`;
+        @constant ROOT = `${__dirname}/../proxies/config/lib`;
       }
       const { Endpoint } = Test.NS;
       const gateway = Test.NS.Gateway.new('TEST_GATEWAY');
@@ -33,7 +33,7 @@ describe('Endpoint', () => {
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
-          @constant ROOT = `${__dirname}/config/lib`
+          @constant ROOT = `${__dirname}/../proxies/config/lib`
         }
         const { Endpoint } = Test.NS;
         const gateway = Test.NS.Gateway.new('TEST_GATEWAY');
@@ -54,7 +54,7 @@ describe('Endpoint', () => {
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
-          @constant ROOT = `${__dirname}/config/lib`;
+          @constant ROOT = `${__dirname}/../proxies/config/lib`;
         }
         const { Endpoint } = Test.NS;
         const gateway = Test.NS.new('TEST_GATEWAY');
@@ -79,7 +79,7 @@ describe('Endpoint', () => {
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
-          @constant ROOT = `${__dirname}/config/lib`;
+          @constant ROOT = `${__dirname}/../proxies/config/lib`;
         }
         const { Endpoint } = Test.NS;
         const gateway = Test.NS.Gateway.new('TEST_GATEWAY');
@@ -104,7 +104,7 @@ describe('Endpoint', () => {
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
-          @constant ROOT = `${__dirname}/config/lib`;
+          @constant ROOT = `${__dirname}/../proxies/config/lib`;
         }
         const { Endpoint } = Test.NS;
         const response = {
@@ -129,7 +129,7 @@ describe('Endpoint', () => {
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
-          @constant ROOT = `${__dirname}/config/lib`;
+          @constant ROOT = `${__dirname}/../proxies/config/lib`;
         }
         const { Endpoint } = Test.NS;
         const gateway = Test.NS.Gateway.new('TEST_GATEWAY');
@@ -154,7 +154,7 @@ describe('Endpoint', () => {
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
-          @constant ROOT = `${__dirname}/config/lib`;
+          @constant ROOT = `${__dirname}/../proxies/config/lib`;
         }
         const { Endpoint } = Test.NS;
         const gateway = Test.NS.Gateway.new('TEST_GATEWAY');
@@ -175,7 +175,7 @@ describe('Endpoint', () => {
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
-          @constant ROOT = `${__dirname}/config/lib`;
+          @constant ROOT = `${__dirname}/../proxies/config/lib`;
         }
         const { Endpoint } = Test.NS;
         const gateway = Test.NS.Gateway.new('TEST_GATEWAY');
@@ -196,7 +196,7 @@ describe('Endpoint', () => {
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
-          @constant ROOT = `${__dirname}/config/lib`;
+          @constant ROOT = `${__dirname}/../proxies/config/lib`;
         }
         const { Endpoint } = Test.NS;
         const gateway = Test.NS.Gateway.new('TEST_GATEWAY');
