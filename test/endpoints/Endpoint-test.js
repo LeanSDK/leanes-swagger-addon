@@ -1,9 +1,9 @@
 const { expect, assert } = require('chai');
 const sinon = require('sinon');
-const SwaggerAddon = require("../../../src/index.js").default;
-const LeanES = require('leanes/src/leanes').default;
+const SwaggerAddon = require("../../src/index.js").default;
+const LeanES = require('@leansdk/leanes/src/leanes').default;
 const {
-  initialize, partOf, nameBy, meta, constant, mixin, property, method, attribute, action, plugin,
+  initialize, partOf, nameBy, meta, constant, plugin,
   Utils: { joi }
 } = LeanES.NS;
 

@@ -15,7 +15,7 @@
 
 import type { GatewayInterface } from '../interfaces/GatewayInterface';
 import type { EndpointInterface } from '../interfaces/EndpointInterface';
-import type { JoiT } from '@leansdk/leanes/src';
+import type { JoiT } from '@leansdk/leanes/src/leanes/leanes';
 
 export default (Module) => {
   const {

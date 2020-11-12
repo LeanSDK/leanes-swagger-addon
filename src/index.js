@@ -19,10 +19,11 @@ export type { SwaggerGatewayInterface } from './interfaces/SwaggerGatewayInterfa
 
 export default (Module) => {
   const {
+    Module: BaseModule,
     initializeMixin, meta, constant, method, patch
   } = Module.NS;
 
-  return ['SwaggerAddon', (BaseClass: Class<Module.NS.Module>) => {
+  return ['SwaggerAddon', (BaseClass: Class<BaseModule>) => {
     @initializeMixin
     class Mixin extends BaseClass {
       @meta static object = {};
@@ -31,7 +32,7 @@ export default (Module) => {
       @constant SWAGGER_GATEWAY = 'SwaggerGateway';
 
       @method static including() {
-        patch(this.NS.Facade, this.NS.FacadePatch);
+        patch(this.NS.FacadePatch)(this.NS.Facade);
       }
     }
     require('./endpoints/SwaggerEndpoint').default(Mixin);

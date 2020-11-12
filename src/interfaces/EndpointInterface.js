@@ -16,7 +16,7 @@
 import type { EndpointInterface:EndpointInterfaceDef } from './EndpointInterface';
 import type { GatewayInterface } from './GatewayInterface';
 import type { ProxyInterface } from './../../patternes/interfaces/ProxyInterface';
-import type { JoiT } from '@leansdk/leanes/src';
+import type { JoiT } from '@leansdk/leanes/src/leanes';
 
 export interface EndpointInterface extends ProxyInterface {
 
