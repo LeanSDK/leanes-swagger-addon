@@ -17,7 +17,7 @@ export default (Module) => {
   const {
     SwaggerEndpoint,
     CrudEndpointMixin,
-    initialize, mixin, module, meta, nameBy,
+    initialize, mixin, partOf, meta, nameBy,
     Utils: { stasuses, joi }
   } = Module.NS;
 
@@ -26,29 +26,29 @@ export default (Module) => {
   const UPGRADE_REQUIRED = stasuses('upgrade required');
 
   @initialize
+  @partOf(Module)
   @mixin(CrudEndpointMixin)
-  @module(Module)
   class ModelingDestroyEndpoint extends SwaggerEndpoint {
     @nameBy static __filename = filename;
     @meta static object = {};
 
     constructor() {
       super(...arguments);
-      this.pathParam('v', this.versionSchema);
-      this.header('Authorization', joi.string().required(), `
-        Authorization header for internal services.
-      `);
-      this.error(HTTP_NOT_FOUND);
-      this.error(UNAUTHORIZED);
-      this.error(UPGRADE_REQUIRED);
-      this.response(null);
-      this.summary(`
-        Remove the ${this.itemEntityName}
-      `);
-      this.description(`
-        Deletes the ${this.itemEntityName}
-        from the database.
-      `);
+      this.pathParam('v', this.versionSchema)
+        .header('Authorization', joi.string().required(), `
+          Authorization header for internal services.
+        `)
+        .error(HTTP_NOT_FOUND)
+        .error(UNAUTHORIZED)
+        .error(UPGRADE_REQUIRED)
+        .response(null)
+        .summary(`
+          Remove the ${this.itemEntityName}
+        `)
+        .description(`
+          Deletes the ${this.itemEntityName}
+          from the database.
+        `);
     }
   }
 }

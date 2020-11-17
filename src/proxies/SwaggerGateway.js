@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with leanes-swagger-addon.  If not, see <https://www.gnu.org/licenses/>.
 
-import type { JoiT } from '@leansdk/leanes/src';
+import type { JoiT } from '../types/JoiT';
 import type { SwaggerGatewayInterface } from '../interfaces/SwaggerGatewayInterface';
 import type { SwaggerEndpointInterface } from '../interfaces/SwaggerEndpointInterface';
 
@@ -21,34 +21,26 @@ const indexOf = [].indexOf;
 
 export default (Module) => {
   const {
-    CoreObject,
     Proxy,
-    ConfigurableMixin,
-    initialize, module, meta, property, method, nameBy,
+    initialize, partOf, meta, property, method, nameBy,
     Utils: { inflect, assign }
   } = Module.NS;
 
   @initialize
-  @module(Module)
-  @mixin(ConfigurableMixin)
+  @partOf(Module)
   class SwaggerGateway extends Proxy implements SwaggerGatewayInterface {
     @nameBy static  __filename = __filename;
     @meta static object = {};
 
-    // ipsMultitonKey = Symbol.for '~multitonKey' #PointerT @protected multitonKey: String
-    // iplKnownEndpoints = PointerT(Gateway.protected({
     @property _knownEndpoints: string[] = null;
 
-    // ipcApplicationModule = PointerT @protected ApplicationModule: MaybeG SubsetG Module
-    // iphSchemas = PointerT(Gateway.protected({
     @property _schemas: {[key: string]: ?JoiT} = null;
 
-    // ipsEndpointsPath = PointerT(Gateway.protected({
     @property get _endpointsPath(): string {
       return `${this.ApplicationModule.NS.ROOT}/endpoints`;
     }
 
-    @method tryLoadEndpoint(asName: string): ?Class<CoreObject> {
+    @method tryLoadEndpoint(asName: string): ?Class<*> {
       if (indexOf.call(this._knownEndpoints, asName) >= 0) {
         const vsEndpointPath = `${this._endpointsPath}/${asName}`;
         try {
@@ -57,7 +49,7 @@ export default (Module) => {
       }
     }
 
-    @method getEndpointByName(asName: string): ?Class<CoreObject> {
+    @method getEndpointByName(asName: string): ?Class<*> {
       return this.ApplicationModule.NS[asName] || this.tryLoadEndpoint(asName);
     }
 
@@ -68,12 +60,12 @@ export default (Module) => {
       return inflect.camelize(vsPath);
     }
 
-    @method getStandardActionEndpoint(asResourse: string, asAction: string): Class<CoreObject> {
+    @method getStandardActionEndpoint(asResourse: string, asAction: string): Class<*> {
       const vsEndpointName = `${inflect.camelize(asAction)}Endpoint`;
       return this.ApplicationModule.NS[vsEndpointName] || this.ApplicationModule.NS.Endpoint;
     }
 
-    @method getEndpoint(asResourse: string, asAction: string): Class<CoreObject> {
+    @method getEndpoint(asResourse: string, asAction: string): Class<*> {
       const vsEndpointName = this.getEndpointName(asResourse, asAction);
       return this.getEndpointByName(vsEndpointName) || this.getStandardActionEndpoint(asResourse, asAction);
     }

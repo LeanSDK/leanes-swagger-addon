@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with leanes-swagger-addon.  If not, see <https://www.gnu.org/licenses/>.
 
-import type { JoiT } from '@leansdk/leanes/src';
+import type { JoiT } from '../types/JoiT';
 
 export default (Module) => {
   const {
@@ -22,21 +22,17 @@ export default (Module) => {
     Utils: {_, joi, inflect}
   } = Module.NS;
 
-  Module.defineMixin(__filename, (BaseClass: Class<SwaggerEndpoint>) => {
+  Module.defineMixin(__filename, (BaseClass) => {
     @initializeMixin
     class Mixin extends BaseClass {
       @meta static object = {};
 
-      // ipsKeyName = PointerT(_Class.private({
       @property _keyName: ?string = null;
 
-      // ipsEntityName = PointerT(_Class.private({
       @property _entityName: ?string = null;
 
-      // ipsRecordName = PointerT(_Class.private({
       @property _recordName: ?string = null;
 
-      // ipoSchema = PointerT(_Class.private({
       @property _schema: ?object = null;
 
       @property get keyName(): string {
@@ -112,7 +108,7 @@ export default (Module) => {
         return joi.string().required().description('The version of api endpoint in semver format `^x.x`');
       }
 
-      @property get ApplicationModule(): Class<Module> {
+      @property get ApplicationModule(): Class<*> {
         return (this.gateway && this.gateway.ApplicationModule) || this.Module;
       }
 

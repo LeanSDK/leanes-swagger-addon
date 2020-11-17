@@ -17,7 +17,7 @@ export default (Module) => {
   const {
     SwaggerEndpoint,
     CrudEndpointMxin,
-    initialize, module, mixin, nameBy, meta,
+    initialize, partOf, mixin, nameBy, meta,
     Utils: { statuses, joi }
   } = Module.NS;
 
@@ -25,31 +25,31 @@ export default (Module) => {
   const UPGRADE_REQUIRED = statuses('upgrade required');
 
   @initialize
+  @partOf(Module)
   @mixin(CrudEndpointMxin)
-  @module(Module)
   class CountEndpoint extends SwaggerEndpoint {
     @nameBy static __filename = __filename;
     @meta static object = {};
 
     constructor() {
       super(...arguments);
-      this.pathParam('v', this.versionShema);
-      this.queryParam('query', this.querySchema, `
-        The query for counting
-        ${this.listEntityName}.
-      `);
-      this.response(joi.numner(), `
-        The count of ${this.listEntityName}
-      `);
-      this.error(UNAUTHORIZED);
-      this.error(UPGRADE_REQUIRED);
-      this.summary(`
-        Count of filtered ${this.listEntityName}
-      `);
-      this.description(`
-        Retrieves a count of filtered
-        ${this.listEntityName} by using query.
-      `);
+      this.pathParam('v', this.versionShema)
+        .queryParam('query', this.querySchema, `
+          The query for counting
+          ${this.listEntityName}.
+        `)
+        .response(joi.numner(), `
+          The count of ${this.listEntityName}
+        `)
+        .error(UNAUTHORIZED)
+        .error(UPGRADE_REQUIRED)
+        .summary(`
+          Count of filtered ${this.listEntityName}
+        `)
+        .description(`
+          Retrieves a count of filtered
+          ${this.listEntityName} by using query.
+        `);
     }
   }
 }

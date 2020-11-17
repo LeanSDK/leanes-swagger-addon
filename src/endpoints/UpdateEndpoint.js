@@ -17,7 +17,7 @@ export default (Module) => {
   const {
     SwaggerEndpoint,
     CrudEndpointMixin,
-    initialize, module, meta, nameBy, mixin,
+    initialize, partOf, meta, nameBy, mixin,
     Utils: { statuses }
   } = Module.NS;
 
@@ -27,34 +27,34 @@ export default (Module) => {
   const UPGRADE_REQUIRED = statuses('upgrade required');
 
   @initialize
+  @partOf(Module)
   @mixin(CrudEndpointMixin)
-  @module(Module)
   class UpdateEndpoint extends SwaggerEndpoint {
     @nameBy static __filename = __filename;
     @meta static object = {};
 
     constructor() {
       super(...arguments);
-      this.pathParam('v', this.versionShema);
-      this.body(this.itemSchema.required(), `
-        The data to replace the
-        ${this.itemEntityName} with.
-      `);
-      this.response(this.itemSchema, `
-        The replaced ${this.itemEntityName}.
-      `);
-      this.error(HTTP_NOT_FOUND);
-      this.error(HTTP_CONFLICT);
-      this.error(UNAUTHORIZED);
-      this.error(UPGRADE_REQUIRED);
-      this.summary(`
-        Replace the ${this.itemEntityName}
-      `);
-      this.description(`
-        Replaces an existing
-        ${this.itemEntityName} with the
-        request body and returns the new document.
-      `);
+      this.pathParam('v', this.versionShema)
+        .body(this.itemSchema.required(), `
+          The data to replace the
+          ${this.itemEntityName} with.
+        `)
+        .response(this.itemSchema, `
+          The replaced ${this.itemEntityName}.
+        `)
+        .error(HTTP_NOT_FOUND)
+        .error(HTTP_CONFLICT)
+        .error(UNAUTHORIZED)
+        .error(UPGRADE_REQUIRED)
+        .summary(`
+          Replace the ${this.itemEntityName}
+        `)
+        .description(`
+          Replaces an existing
+          ${this.itemEntityName} with the
+          request body and returns the new document.
+        `);
     }
   }
 }

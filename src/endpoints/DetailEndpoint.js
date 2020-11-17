@@ -17,7 +17,7 @@ export default (Module) => {
   const {
     SwaggerEndpoint,
     CrudEndpointMxin,
-    initialize, module, mixin, nameBy, meta,
+    initialize, partOf, mixin, nameBy, meta,
     Utils: { statuses }
   } = Module.NS;
 
@@ -26,28 +26,28 @@ export default (Module) => {
   const UPGRADE_REQUIRED = statuses('upgrade required');
 
   @initialize
+  @partOf(Module)
   @mixin(CrudEndpointMxin)
-  @module(Module)
   class DetailEndpoint extends SwaggerEndpoint {
     @nameBy static __filename = __filename;
     @meta static object = {};
 
     constructor() {
       super(...arguments);
-      this.pathParam('v', this.versionSchema);
-      this.response(this.itemSchema, `
-        The ${this.itemEntityName}.
-      `);
-      this.error(HTTP_NOT_FOUND);
-      this.error(UNAUTHORIZED);
-      this.error(UPGRADE_REQUIRED);
-      this.summary(`
-        Fetch the ${this.itemEntityName}
-      `);
-      this.description(`
-        Retrieves the
-        ${this.itemEntityName} by its key.
-      `);
+      this.pathParam('v', this.versionSchema)
+        .response(this.itemSchema, `
+          The ${this.itemEntityName}.
+        `)
+        .error(HTTP_NOT_FOUND)
+        .error(UNAUTHORIZED)
+        .error(UPGRADE_REQUIRED)
+        .summary(`
+          Fetch the ${this.itemEntityName}
+        `)
+        .description(`
+          Retrieves the
+          ${this.itemEntityName} by its key.
+        `);
     }
   }
 }

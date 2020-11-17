@@ -21,19 +21,16 @@ import mediaTyper from 'media-typer';
 import pathToRegexp from 'path-to-regexp';
 import joiToJsonSchema from 'joi-to-json-schema';
 
-import { inject } from 'inversify';
-
-import type { RouterInterface } from '@leansdk/leanes-restful-addon/src';
+import type { RouterInterface } from '../interfaces/RouterInterface';
 import type { SwaggerGatewayInterface } from '../interfaces/SwaggerGatewayInterface';
 
 export default (Module) => {
   const {
     APPLICATION_ROUTER, SWAGGER_GATEWAY,
     Resource,
-    initialize, partOf, nameBy, meta, property, method, action, chains,
+    initialize, partOf, nameBy, meta, property, method, action, chains, inject,
     Utils: { _, joi, statuses },
   } = Module.NS;
-
 
   const DEFAULT_ERROR_SCHEMA = joi.object().keys({
     error: joi.allow(true).required(),
@@ -61,8 +58,19 @@ export default (Module) => {
     @method static specification: ?object = null;
     @method static specEtag: string = null;
 
-    @property _appRouter: RouterInterface = null;
-    @property _swaggerGateway: SwaggerGatewayInterface = null;
+    @inject(`Factory<${APPLICATION_ROUTER}>`)
+    @property _appRouterFactory: () => RouterInterface;
+
+    @property get _appRouter(): RouterInterface {
+      return this._appRouterFactory();
+    }
+
+    @inject(`Factory<${SWAGGER_GATEWAY}>`)
+    @property _swaggerGatewayFactory: () => SwaggerGatewayInterface;
+
+    @property get _swaggerGateway(): SwaggerGatewayInterface {
+      return this._swaggerGatewayFactory();
+    }
 
     @action async index() {
       this.context.redirect('swagger/index.html')
@@ -493,15 +501,6 @@ export default (Module) => {
       } else {
         return joiToJsonSchema(schema);
       }
-    }
-
-    constructor({
-      @inject(`Factory<${APPLICATION_ROUTER}>`) appRouterFactory: () => RouterInterface,
-      @inject(`Factory<${SWAGGER_GATEWAY}>`) swaggerGatewayFactory: () => SwaggerGatewayInterface,
-    }) {
-      super(... arguments)
-      this._appRouter = appRouterFactory()
-      this._swaggerGateway = swaggerGatewayFactory()
     }
   }
 }

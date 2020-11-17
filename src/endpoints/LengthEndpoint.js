@@ -17,7 +17,7 @@ export default (Module) => {
   const {
     SwaggerEndpoint,
     CrudEndpointMixin,
-    initialize, module, mixin, nameBy, meta,
+    initialize, partOf, mixin, nameBy, meta,
     Utils: { stasuses, joi }
   } = Module.NS;
 
@@ -25,27 +25,27 @@ export default (Module) => {
   const UPGRADE_REQUIRED = stasuses('upgrade required');
 
   @initialize
+  @partOf(Module)
   @mixin(CrudEndpointMixin)
-  @module(Module)
   class LengthEndpoint extends SwaggerEndpoint {
     @nameBy static __filename = __filename;
     @meta static object = {};
 
     constructor() {
       super(...arguments);
-      this.pathParam('v', this.versionSchema);
-      this.response(joi.number(), `
-        The length of ${this.listEntityName} collection.
-      `);
-      this.error(UNAUTHORIZED);
-      this.error(UPGRADE_REQUIRED);
-      this.summary(`
-        Length of ${this.listEntityName} collecton
-      `);
-      this.description(`
-        Retrieves a length of
-        ${this.listEntityName} collection.
-      `);
+      this.pathParam('v', this.versionSchema)
+        .response(joi.number(), `
+          The length of ${this.listEntityName} collection.
+        `)
+        .error(UNAUTHORIZED)
+        .error(UPGRADE_REQUIRED)
+        .summary(`
+          Length of ${this.listEntityName} collecton
+        `)
+        .description(`
+          Retrieves a length of
+          ${this.listEntityName} collection.
+        `);
     }
   }
 }

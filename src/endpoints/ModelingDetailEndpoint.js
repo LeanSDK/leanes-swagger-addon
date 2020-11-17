@@ -17,7 +17,7 @@ export default (Module) => {
   const {
     SwaggerEndpoint,
     CrudEndpointMixin,
-    initialize, module, meta, nameBy, mixin,
+    initialize, partOf, meta, nameBy, mixin,
     Utils: { stasuses, joi}
   } = Module.NS;
 
@@ -26,31 +26,31 @@ export default (Module) => {
   const UPGRADE_REQUIRED = statuses('upgrade required');
 
   @initialize
+  @partOf(Module)
   @mixin(CrudEndpointMixin)
-  @module(Module)
   class ModelingDetailEndpoint extends SwaggerEndpoint {
     @nameBy static __filename = __filename;
     @meta static object = {};
 
     constructor() {
       super(...arguments);
-      this.pathParam('v', this.versionSchema);
-      this.header('Authorization', joi.string().required(), `
-        Authorization header for internal services.
-      `);
-      this.response(this.itemSchema, `
-        The ${this.itemEntityName}.
-      `);
-      this.error(HTTP_NOT_FOUND);
-      this.error(UNAUTHORIZED);
-      this.error(UPGRADE_REQUIRED);
-      this.summary(`
-        Fetch the ${this.itemEntityName}
-      `);
-      this.description(`
-        Retrieves the
-        ${this.itemEntityName} by its key.
-      `);
+      this.pathParam('v', this.versionSchema)
+        .header('Authorization', joi.string().required(), `
+          Authorization header for internal services.
+        `)
+        .response(this.itemSchema, `
+          The ${this.itemEntityName}.
+        `)
+        .error(HTTP_NOT_FOUND)
+        .error(UNAUTHORIZED)
+        .error(UPGRADE_REQUIRED)
+        .summary(`
+          Fetch the ${this.itemEntityName}
+        `)
+        .description(`
+          Retrieves the
+          ${this.itemEntityName} by its key.
+        `);
     }
   }
 }

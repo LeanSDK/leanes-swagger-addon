@@ -13,6 +13,42 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with leanes-swagger-addon.  If not, see <https://www.gnu.org/licenses/>.
 
+import SwaggerEndpoint from './endpoints/SwaggerEndpoint';
+import SwaggerResource from './resources/SwaggerResource';
+import SwaggerGateway from './proxies/SwaggerGateway';
+import SwaggerRouter from './proxies/SwaggerRouter';
+
+import CrudEndpointMixin from './mixins/CrudEndpointMixin';
+import ModelingGatewayMixin from './mixins/ModelingGatewayMixin';
+import NamespacedGatewayMixin from './mixins/NamespacedGatewayMixin';
+
+import CreateEndpoint from './endpoints/CreateEndpoint';
+import ListEndpoint from './endpoints/ListEndpoint';
+import DetailEndpoint from './endpoints/DetailEndpoint';
+import UpdateEndpoint from './endpoints/UpdateEndpoint';
+import DeleteEndpoint from './endpoints/DeleteEndpoint';
+import DestroyEndpoint from './endpoints/DestroyEndpoint';
+
+import CountEndpoint from './endpoints/CountEndpoint';
+import LengthEndpoint from './endpoints/LengthEndpoint';
+
+import BulkDeleteEndpoint from './endpoints/BulkDeleteEndpoint';
+import BulkDestroyEndpoint from './endpoints/BulkDestroyEndpoint';
+
+import ModelingCreateEndpoint from './endpoints/ModelingCreateEndpoint';
+import ModelingListEndpoint from './endpoints/ModelingListEndpoint';
+import ModelingDetailEndpoint from './endpoints/ModelingDetailEndpoint';
+import ModelingUpdateEndpoint from './endpoints/ModelingUpdateEndpoint';
+import ModelingDeleteEndpoint from './endpoints/ModelingDeleteEndpoint';
+import ModelingDestroyEndpoint from './endpoints/ModelingDestroyEndpoint';
+
+import ModelingQueryEndpoint from './endpoints/ModelingQueryEndpoint';
+
+import ModelingBulkDeleteEndpoint from './endpoints/ModelingBulkDeleteEndpoint';
+import ModelingBulkDestroyEndpoint from './endpoints/ModelingBulkDestroyEndpoint';
+
+import FacadePatch from './patches/FacadePatch';
+
 export type { SwaggerEndpointStruct } from './interfaces/SwaggerEndpointStruct';
 export type { SwaggerEndpointInterface } from './interfaces/SwaggerEndpointInterface';
 export type { SwaggerGatewayInterface } from './interfaces/SwaggerGatewayInterface';
@@ -22,7 +58,38 @@ export default (Module) => {
     initializeMixin, meta, constant, method, patch
   } = Module.NS;
 
-  return ['SwaggerAddon', (BaseClass: Class<Module.NS.Module>) => {
+  return ['SwaggerAddon', (BaseClass) => {
+    @FacadePatch
+
+    @CreateEndpoint
+    @ListEndpoint
+    @DetailEndpoint
+    @UpdateEndpoint
+    @DeleteEndpoint
+    @DestroyEndpoint
+    @CountEndpoint
+    @LengthEndpoint
+    @BulkDeleteEndpoint
+    @BulkDestroyEndpoint
+    @ModelingCreateEndpoint
+    @ModelingListEndpoint
+    @ModelingDetailEndpoint
+    @ModelingUpdateEndpoint
+    @ModelingDeleteEndpoint
+    @ModelingDestroyEndpoint
+    @ModelingQueryEndpoint
+    @ModelingBulkDeleteEndpoint
+    @ModelingBulkDestroyEndpoint
+
+    @ModelingGatewayMixin
+    @NamespacedGatewayMixin
+    @CrudEndpointMixin
+
+    @SwaggerEndpoint
+    @SwaggerResource
+    @SwaggerGateway
+    @SwaggerRouter
+
     @initializeMixin
     class Mixin extends BaseClass {
       @meta static object = {};
@@ -31,45 +98,9 @@ export default (Module) => {
       @constant SWAGGER_GATEWAY = 'SwaggerGateway';
 
       @method static including() {
-        patch(this.NS.Facade, this.NS.FacadePatch);
+        patch(this.NS.FacadePatch)(this.NS.Facade);
       }
     }
-    require('./endpoints/SwaggerEndpoint').default(Mixin);
-    require('./resources/SwaggerResource').default(Mixin);
-    require('./proxies/SwaggerGateway').default(Mixin);
-    require('./proxies/SwaggerRouter').default(Mixin);
-
-    require('./mixins/ConfigurableMixin').default(Mixin);
-    require('./mixins/MemoryConfigurationMixin').default(Mixin);
-    require('./mixins/MemoryConfigurationMixin').default(Mixin);
-
-    require('./endpoints/CreateEndpoint').default(Mixin);
-    require('./endpoints/ListEndpoint').default(Mixin);
-    require('./endpoints/DetailEndpoint').default(Mixin);
-    require('./endpoints/UpdateEndpoint').default(Mixin);
-    require('./endpoints/DeleteEndpoint').default(Mixin);
-    require('./endpoints/DestroyEndpoint').default(Mixin);
-
-    require('./endpoints/CountEndpoint').default(Mixin);
-    require('./endpoints/LengthEndpoint').default(Mixin);
-
-    require('./endpoints/BulkDeleteEndpoint').default(Mixin);
-    require('./endpoints/BulkDestroyEndpoint').default(Mixin);
-
-    require('./endpoints/ModelingCreateEndpoint').default(Mixin);
-    require('./endpoints/ModelingListEndpoint').default(Mixin);
-    require('./endpoints/ModelingDetailEndpoint').default(Mixin);
-    require('./endpoints/ModelingUpdateEndpoint').default(Mixin);
-    require('./endpoints/ModelingDeleteEndpoint').default(Mixin);
-    require('./endpoints/ModelingDestroyEndpoint').default(Mixin);
-
-    require('./endpoints/ModelingQueryEndpoint').default(Mixin);
-
-    require('./endpoints/ModelingBulkDeleteEndpoint').default(Mixin);
-    require('./endpoints/ModelingBulkDestroyEndpoint').default(Mixin);
-
-    require('./patches/FacadePatch').default(Mixin);
-
     return Mixin;
   }]
 }

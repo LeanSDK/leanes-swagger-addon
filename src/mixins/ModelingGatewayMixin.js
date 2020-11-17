@@ -15,17 +15,16 @@
 
 export default (Module) => {
   const {
-    CoreObject, SwaggerGateway,
     initializeMixin, meta, method,
     Utils: { _, inflect }
   } = Module.NS;
 
-  Module.defineMixin(__filename, (BaseClass: Class<SwaggerGateway>) => {
+  Module.defineMixin(__filename, (BaseClass) => {
     @initializeMixin
     class Mixin extends BaseClass {
       @meta static object = {};
 
-      @method getStandardActionEndpoint(asResourse: string, asAction: string): Class<CoreObject> {
+      @method getStandardActionEndpoint(asResourse: string, asAction: string): Class<*> {
         const vsEndpointName = _.startsWith(asResourse.toLowerCase(), 'modeling')
           ? `Modeling${inflect.camelize(asAction)}Endpoint`
           : `${inflect.camelize(asAction)}Endpoint`;

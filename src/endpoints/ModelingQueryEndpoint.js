@@ -17,7 +17,7 @@ export default (Module) => {
   const {
     SwaggerEndpoint,
     CrudEndpointMixin,
-    initialize, module, meta, nameBy, mixin,
+    initialize, partOf, meta, nameBy, mixin,
     Utils: { statuses, joi }
   } = Module.NS;
 
@@ -25,32 +25,32 @@ export default (Module) => {
   const UPGRADE_REQUIRED = statuses('upgrade required');
 
   @initialize
+  @partOf(Module)
   @mixin(CrudEndpointMixin)
-  @module(Module)
   class ModelingQueryEndpoint extends SwaggerEndpoint {
     @nameBy static __filename = __filename;
     @meta static object = {};
 
     constructor() {
       super(...arguments);
-      this.pathParam('v', this.versionSchema);
-      this.header('Authorization', joi.string().required(), `
-        Authorization header is required.
-      `);
-      this.body(this.executeQuerySchema, `
-        The query for execute.
-      `);
-      this.response(joi.array().items(joi.any()), `
-        Any result.
-      `);
-      this.error(UNAUTHORIZED);
-      this.error(UPGRADE_REQUIRED);
-      this.summary(`
-        Execute some query
-      `);
-      this.description(`
-        This endpoint will been used from HttpCollectionMixin
-      `);
+      this.pathParam('v', this.versionSchema)
+        .header('Authorization', joi.string().required(), `
+          Authorization header is required.
+        `)
+        .body(this.executeQuerySchema, `
+          The query for execute.
+        `)
+        .response(joi.array().items(joi.any()), `
+          Any result.
+        `)
+        .error(UNAUTHORIZED)
+        .error(UPGRADE_REQUIRED)
+        .summary(`
+          Execute some query
+        `)
+        .description(`
+          This endpoint will been used from HttpCollectionMixin
+        `);
     }
   }
 }

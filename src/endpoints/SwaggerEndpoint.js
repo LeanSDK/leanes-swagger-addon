@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with leanes-swagger-addon.  If not, see <https://www.gnu.org/licenses/>.
 
-import type { JoiT } from '@leansdk/leanes/src';
+import type { JoiT } from '../types/JoiT';
 import type { SwaggerGatewayInterface } from '../interfaces/SwaggerGatewayInterface';
 import type { SwaggerEndpointInterface } from '../interfaces/SwaggerEndpointInterface';
 
@@ -21,13 +21,12 @@ export default (Module) => {
   const {
     CoreObject,
     assert,
-    initialize, module, meta, property, method, nameBy,
+    initialize, partOf, meta, property, method, nameBy,
     Utils: { inflect, assign }
   } = Module.NS;
 
-
   @initialize
-  @module(Module)
+  @partOf(Module)
   class SwaggerEndpoint extends CoreObject implements SwaggerEndpointInterface {
     @nameBy static  __filename = __filename;
     @meta static object = {};
@@ -164,7 +163,7 @@ export default (Module) => {
       return assert.fail(`replicateObject method not supported for ${this.name}`);
     }
 
-    constructor(...args: [{gateway: SwaggerGatewayInterface}]) {
+    constructor(...args) {
       super(... args);
       const [ options ] = args;
       ({ gateway: this.gateway } = options);

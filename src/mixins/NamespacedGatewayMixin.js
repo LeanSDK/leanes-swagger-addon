@@ -15,12 +15,11 @@
 
 export default (Module) => {
   const {
-    CoreObject, SwaggerGateway,
     initializeMixin, meta, property, method,
     Utils: { inflect }
   } = Module.NS;
 
-  Module.defineMixin(__filename, (BaseClass: Class<SwaggerGateway>) => {
+  Module.defineMixin(__filename, (BaseClass) => {
     @initializeMixin
     class Mixin extends BaseClass {
       @meta static object = {};
@@ -48,7 +47,7 @@ export default (Module) => {
         return inflect.camelize(vsPath);
       }
 
-      @method getEndpoint(asResourse: string, asAction: string): Class<CoreObject> {
+      @method getEndpoint(asResourse: string, asAction: string): Class<*> {
         return this.getEndpointByName(
           this.getEndpointName(asResourse, asAction)
         ) ||

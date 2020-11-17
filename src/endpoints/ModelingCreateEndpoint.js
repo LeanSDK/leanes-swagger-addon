@@ -17,7 +17,7 @@ export default (Module) => {
   const {
     SwaggerEndpoint,
     CrudEndpointMixin,
-    initialize, mixin, module, nameBy, meta,
+    initialize, mixin, partOf, nameBy, meta,
     Utils: { stasuses, joi }
   } = Module.NS;
 
@@ -26,38 +26,38 @@ export default (Module) => {
   const UPGRADE_REQUIRED = stasuses('upgrade required');
 
   @initialize
+  @partOf(Module)
   @mixin(CrudEndpointMixin);
-  @module(Module)
   class ModelingCreateEndpoint extends SwaggerEndpoint {
     @nameBy static __filename = __filename;
     @meta static object = {};
 
     constructor() {
       super(...arguments);
-      this.pathParam('v', this.versionSchema);
-      this.header('Authorization', joi.string().required(), `
-        Authorization header for internal services.
-      `);
-      this.body(this.itemSchema.required(), `
-        The ${this.itemEntityName} to create.
-      `);
-      this.response(201, this.itemScema, `
-        The created ${this.itemEntityName}.
-      `);
-      this.error(HTTP_CONFLICT, `
-        The ${this.itemEntityName} already
-        exists.
-      `);
-      this.error(UNAUTHORIZED);
-      this.error(UPGRADE_REQUIRED);
-      this.summary(`
-        Create a new ${this.itemEntityName}
-      `);
-      this.description(`
-        Creates a new ${this.itemEntityName}
-        from the request body and
-        returns the saved document.
-      `);
+      this.pathParam('v', this.versionSchema)
+        .header('Authorization', joi.string().required(), `
+          Authorization header for internal services.
+        `)
+        .body(this.itemSchema.required(), `
+          The ${this.itemEntityName} to create.
+        `)
+        .response(201, this.itemScema, `
+          The created ${this.itemEntityName}.
+        `)
+        .error(HTTP_CONFLICT, `
+          The ${this.itemEntityName} already
+          exists.
+        `)
+        .error(UNAUTHORIZED)
+        .error(UPGRADE_REQUIRED)
+        .summary(`
+          Create a new ${this.itemEntityName}
+        `)
+        .description(`
+          Creates a new ${this.itemEntityName}
+          from the request body and
+          returns the saved document.
+        `);
     }
   }
 }

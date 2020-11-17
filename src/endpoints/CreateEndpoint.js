@@ -17,7 +17,7 @@ export default (Module) => {
   const {
     SwaggerEndpoint,
     CrudEndpointMxin,
-    initialize, module, mixin, nameBy, meta,
+    initialize, partOf, mixin, nameBy, meta,
     Utils: { statuses }
   } = Module.NS;
 
@@ -26,35 +26,35 @@ export default (Module) => {
   const UPGRADE_REQUIRED = statuses('upgrade required');
 
   @initialize
+  @partOf(Module)
   @mixin(CrudEndpointMxin)
-  @module(Module)
   class CreateEndpoint extends SwaggerEndpoint {
     @nameBy static __filename = __filename;
     @meta static object = {};
 
     constructor() {
       super(...arguments);
-      this.pathParam('v', this.versionShema);
-      this.body(this.itemSchema.required(), `
-        The ${this.itemEntityName} to create.
-      `)
-      this.response(201, this.itemSchema, `
-        The created ${this.itemEntityName}.
-      `);
-      this.error(HTTP_CONFLICT, `
-        The ${this.itemEntityName} already
-        exists.
-      `)
-      this.error(UNAUTHORIZED);
-      this.error(UPGRADE_REQUIRED);
-      this.summary(`
-        Create a new ${this.itemEntityName}
-      `);
-      this.description(`
-        Creates a new ${this.itemEntityName}
-        from the request body and
-        returns the saved document.
-      `);
+      this.pathParam('v', this.versionShema)
+        .body(this.itemSchema.required(), `
+          The ${this.itemEntityName} to create.
+        `)
+        .response(201, this.itemSchema, `
+          The created ${this.itemEntityName}.
+        `)
+        .error(HTTP_CONFLICT, `
+          The ${this.itemEntityName} already
+          exists.
+        `)
+        .error(UNAUTHORIZED)
+        .error(UPGRADE_REQUIRED)
+        .summary(`
+          Create a new ${this.itemEntityName}
+        `)
+        .description(`
+          Creates a new ${this.itemEntityName}
+          from the request body and
+          returns the saved document.
+        `);
     }
   }
 }

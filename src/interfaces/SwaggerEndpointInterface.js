@@ -13,9 +13,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with leanes-swagger-addon.  If not, see <https://www.gnu.org/licenses/>.
 
-import type { JoiT } from '@leansdk/leanes/src';
-import type { SwaggerGatewayInterface } from '.SwaggerGatewayInterface';
-import type { SwaggerEndpointStruct } from '.SwaggerEndpointStruct';
+import type { JoiT } from '../types/JoiT';
+import type { SwaggerGatewayInterface } from './SwaggerGatewayInterface';
+import type { SwaggerEndpointStruct } from './SwaggerEndpointStruct';
 
 export interface SwaggerEndpointInterface<
   Gateway = SwaggerGatewayInterface

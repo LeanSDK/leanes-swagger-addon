@@ -17,7 +17,7 @@ export default (Module) => {
   const {
     SwaggerEndpoint,
     CrudEndpointMixin,
-    initialize, module, mixin, nameBy, meta,
+    initialize, partOf, mixin, nameBy, meta,
     Utils: { stasuses }
   } = Module.NS;
 
@@ -25,31 +25,31 @@ export default (Module) => {
   const UPGRADE_REQUIRED = stasuses('upgrade required');
 
   @initialize
+  @partOf(Module)
   @mixin(CrudEndpointMixin)
-  @module(Module)
   class ListEndpoint extends SwaggerEndpoint {
     @nameBy static __filename = __filename;
     @meta static object = {};
 
     constructor() {
       super(...arguments);
-      this.pathParam('v', this.versionSchema);
-      this.queryParam('query', this.querySchema, `
-        The query for finding
-        ${this.listEntityName}.
-      `);
-      this.response(this.listSchema, `
-        The ${this.listEntityName}.
-      `);
-      this.error(UNAUTHORIZED);
-      this.error(UPGRADE_REQUIRED);
-      this.summary(`
-        List of filtered ${this.listEntityName}
-      `);
-      this.description(`
-        Retrieves a list of filtered
-        ${this.listEntityName} by using query.
-      `)
+      this.pathParam('v', this.versionSchema)
+        .queryParam('query', this.querySchema, `
+          The query for finding
+          ${this.listEntityName}.
+        `)
+        .response(this.listSchema, `
+          The ${this.listEntityName}.
+        `)
+        .error(UNAUTHORIZED)
+        .error(UPGRADE_REQUIRED)
+        .summary(`
+          List of filtered ${this.listEntityName}
+        `)
+        .description(`
+          Retrieves a list of filtered
+          ${this.listEntityName} by using query.
+        `)
     }
   }
 }

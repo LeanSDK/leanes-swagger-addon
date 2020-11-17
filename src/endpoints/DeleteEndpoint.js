@@ -17,7 +17,7 @@ export default (Module) => {
   const {
     SwaggerEndpoint,
     CrudEndpointMxin,
-    initialize, module, mixin, nameBy, meta,
+    initialize, partOf, mixin, nameBy, meta,
     Utils: { statuses }
   } = Module.NS;
 
@@ -26,26 +26,26 @@ export default (Module) => {
   const UPGRADE_REQUIRED = statuses('upgrade required');
 
   @initialize
+  @partOf(Module)
   @mixin(CrudEndpointMxin)
-  @module(Module)
   class DeleteEndpoint extends SwaggerEndpoint {
     @nameBy static __filename = __filename;
     @meta static object = {};
 
     constructor() {
       super(...arguments);
-      this.pathParam('v', this.versionShema);
-      this.error(HTTP_NOT_FOUND);
-      this.error(UNAUTHORIZED);
-      this.error(UPGRADE_REQUIRED);
-      this.response(null);
-      this.summary(`
-        Hide a new ${this.itemEntityName}
-      `);
-      this.description(`
-        Hide the ${this.itemEntityName}
-        from the database.
-      `);
+      this.pathParam('v', this.versionShema)
+        .error(HTTP_NOT_FOUND)
+        .error(UNAUTHORIZED)
+        .error(UPGRADE_REQUIRED)
+        .response(null)
+        .summary(`
+          Hide a new ${this.itemEntityName}
+        `)
+        .description(`
+          Hide the ${this.itemEntityName}
+          from the database.
+        `);
     }
   }
 }
