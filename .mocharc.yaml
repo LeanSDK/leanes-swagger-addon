@@ -3,7 +3,7 @@ color: true
 extension:
   - 'js'
 file:
-  # - 
+  - './test/endpoints/Endpoint-test.js'
 full-trace: true
 growl: true
 recursive: false
@@ -11,4 +11,4 @@ reporter: 'spec'
 # require: '@babel/register'
 require: 'register-babel.js'
 # spec: 'test/**/**/*-test.js'
-watch: true
+watch: false
