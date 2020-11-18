@@ -18,7 +18,7 @@ export default (Module) => {
     SwaggerEndpoint,
     CrudEndpointMixin,
     initialize, partOf, meta, nameBy, mixin,
-    Utils: { stasuses, joi}
+    Utils: { statuses, joi}
   } = Module.NS;
 
   const HTTP_NOT_FOUND = statuses('not found');

@@ -18,16 +18,16 @@ export default (Module) => {
     SwaggerEndpoint,
     CrudEndpointMixin,
     initialize, mixin, partOf, nameBy, meta,
-    Utils: { stasuses, joi }
+    Utils: { statuses, joi }
   } = Module.NS;
 
-  const HTTP_CONFLICT = stasuses('conflict');
-  const UNAUTHORIZED = stasuses('unauthorized');
-  const UPGRADE_REQUIRED = stasuses('upgrade required');
+  const HTTP_CONFLICT = statuses('conflict');
+  const UNAUTHORIZED = statuses('unauthorized');
+  const UPGRADE_REQUIRED = statuses('upgrade required');
 
   @initialize
   @partOf(Module)
-  @mixin(CrudEndpointMixin);
+  @mixin(CrudEndpointMixin)
   class ModelingCreateEndpoint extends SwaggerEndpoint {
     @nameBy static __filename = __filename;
     @meta static object = {};

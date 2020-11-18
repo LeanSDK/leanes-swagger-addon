@@ -16,7 +16,7 @@
 export default (Module) => {
   const {
     SwaggerEndpoint,
-    CrudEndpointMxin,
+    CrudEndpointMixin,
     initialize, partOf, meta, property, method, nameBy, mixin,
     Utils: { statuses }
   } = Module.NS;
@@ -27,7 +27,7 @@ export default (Module) => {
 
   @initialize
   @partOf(Module)
-  @mixin(CrudEndpointMxin)
+  @mixin(CrudEndpointMixin)
   class DestroyEndpoint extends SwaggerEndpoint {
     @nameBy static __filename = __filename;
     @meta static object = {};

@@ -23,7 +23,7 @@ export default (Module) => {
 
   const HTTP_NOT_FOUND = statuses('not found');
   const HTTP_CONFLICT = statuses('conflict');
-  const UNAUTHORIZED = statuses('unathorized');
+  const UNAUTHORIZED = statuses('unauthorized');
   const UPGRADE_REQUIRED = statuses('upgrade required');
 
   @initialize

@@ -18,11 +18,11 @@ export default (Module) => {
     SwaggerEndpoint,
     CrudEndpointMixin,
     initialize, partOf, mixin, nameBy, meta,
-    Utils: { stasuses, joi }
+    Utils: { statuses, joi }
   } = Module.NS;
 
-  const UNAUTHORIZED = stasuses('unauthorized');
-  const UPGRADE_REQUIRED = stasuses('upgrade required');
+  const UNAUTHORIZED = statuses('unauthorized');
+  const UPGRADE_REQUIRED = statuses('upgrade required');
 
   @initialize
   @partOf(Module)

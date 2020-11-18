@@ -65,7 +65,11 @@
     "sinon": "^9.0.3",
     "sinon-chai": "^3.5.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "joi-to-json-schema": "5.1.0",
+    "mime-types": "^2.1.22",
+    "path-to-regexp": "^0.1.7"
+  },
   "bugs": {
     "url": "https://github.com/LeanSDK/leanes-swagger-addon/issues"
   },

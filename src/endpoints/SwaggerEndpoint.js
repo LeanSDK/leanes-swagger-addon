@@ -43,19 +43,19 @@ export default (Module) => {
 
     @property gateway: SwaggerGatewayInterface = null;
 
-    @property tags: ?Array = null;
+    @property tags: ?Array<string> = null;
 
-    @property headers: ?Array = null;
+    @property headers: ?Array<object> = null;
 
-    @property pathParams: ?Array = null;
+    @property pathParams: ?Array<object> = null;
 
-    @property queryParams: ?Array = null;
+    @property queryParams: ?Array<object> = null;
 
     @property payload: ?object = null;
 
-    @property responses: ?Array = null;
+    @property responses: ?Array<object> = null;
 
-    @property errors: ?Array = null;
+    @property errors: ?Array<object> = null;
 
     @property title: ?string = null;
 

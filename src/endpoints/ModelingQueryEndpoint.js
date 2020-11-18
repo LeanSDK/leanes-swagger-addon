@@ -21,7 +21,7 @@ export default (Module) => {
     Utils: { statuses, joi }
   } = Module.NS;
 
-  const UNAUTHORIZED = statuses('unathorized');
+  const UNAUTHORIZED = statuses('unauthorized');
   const UPGRADE_REQUIRED = statuses('upgrade required');
 
   @initialize

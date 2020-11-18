@@ -13,21 +13,20 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with leanes-swagger-addon.  If not, see <https://www.gnu.org/licenses/>.
 
-export interface
-SwaggerEndpointStruct {
-  tags: ?Array;
+export interface SwaggerEndpointStruct {
+  tags: ?Array<string>;
 
-  headers: ?Array;
+  headers: ?Array<object>;
 
-  pathParams: ?Array;
+  pathParams: ?Array<object>;
 
-  queryParams: ?Array;
+  queryParams: ?Array<object>;
 
   payload: ?object;
 
-  responses: ?Array;
+  responses: ?Array<object>;
 
-  errors: ?Array;
+  errors: ?Array<object>;
 
   title: ?string;
 

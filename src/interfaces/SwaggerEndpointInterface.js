@@ -15,11 +15,10 @@
 
 import type { JoiT } from '../types/JoiT';
 import type { SwaggerGatewayInterface } from './SwaggerGatewayInterface';
-import type { SwaggerEndpointStruct } from './SwaggerEndpointStruct';
 
 export interface SwaggerEndpointInterface<
   Gateway = SwaggerGatewayInterface
-> extends SwaggerEndpointStruct {
+> {
   gateway: Gateway;
 
   tag(asName: string): SwaggerEndpointInterface;

@@ -17,7 +17,6 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import mimeTypes from 'mime-types';
-import mediaTyper from 'media-typer';
 import pathToRegexp from 'path-to-regexp';
 import joiToJsonSchema from 'joi-to-json-schema';
 
@@ -39,14 +38,7 @@ export default (Module) => {
     code: joi.number().integer().optional()
   });
 
-  const MIME_JSON = 'application/json; charset=utf-8';
-
-  const PARSED_JSON_MIME = ((mime) => {
-    const mimeType = mimeTypes.contentType(mime);
-    const contentType = mimeType != null ? mimeType : mime;
-    const parsed = mediaTyper.parse(contentType);
-    return mediaTyper.format(_.pick(parsed, ['type', 'subtype', 'suffix']));
-  })(MIME_JSON);
+  const MIME_JSON = 'application/json';
 
   @initialize
   @chains(['index', 'spec', 'static'], function () { return; })
@@ -55,8 +47,8 @@ export default (Module) => {
     @nameBy static __filename = __filename;
     @meta static object = {};
     // @property entityName = 'TestEntity';
-    @method static specification: ?object = null;
-    @method static specEtag: string = null;
+    @property static specification: ?object = null;
+    @property static specEtag: string = null;
 
     @inject(`Factory<${APPLICATION_ROUTER}>`)
     @property _appRouterFactory: () => RouterInterface;
@@ -189,7 +181,7 @@ export default (Module) => {
         //{ schema, mimes, description } = { schema, mimes, description }
         } else if (!_.isArray(schema) && _.isObject(schema) && _.isString(mimes)) {
           description = mimes;
-          mimes = [PARSED_JSON_MIME];
+          mimes = [MIME_JSON];
         } else if (_.isArray(schema) && _.isString(mimes)) {
           description = mimes;
           mimes = schema;
@@ -198,7 +190,7 @@ export default (Module) => {
           description = null;
         } else if (!_.isArray(schema) && _.isObject(schema)) {
           description = null;
-          mimes = [PARSED_JSON_MIME];
+          mimes = [MIME_JSON];
         } else if (_.isArray(schema)) {
           mimes = schema;
           schema = null;
@@ -235,7 +227,7 @@ export default (Module) => {
         // { status, schema, mimes, description } = { status, schema, mimes, description }
         } else if ((_.isNumber(status) || _.isString(status)) && (!_.isArray(schema) && _.isObject(schema)) && _.isString(mimes) && _.isNil(description)) {
           description = mimes;
-          mimes = [PARSED_JSON_MIME];
+          mimes = [MIME_JSON];
         } else if ((_.isNumber(status) || _.isString(status)) && _.isArray(schema) && _.isString(mimes) && _.isNil(description)) {
           description = mimes;
           mimes = schema;
@@ -249,7 +241,7 @@ export default (Module) => {
           status = 200;
         } else if ((_.isNumber(status) || _.isString(status)) && (!_.isArray(schema) && _.isObject(schema)) && _.isNil(mimes) && _.isNil(description)) {
           description = null;
-          mimes = [PARSED_JSON_MIME];
+          mimes = [MIME_JSON];
         } else if ((_.isNumber(status) || _.isString(status)) && _.isArray(schema) && _.isNil(mimes) && _.isNil(description)) {
           description = null;
           mimes = schema;
@@ -267,7 +259,7 @@ export default (Module) => {
           description = schema;
           schema = status;
           status = 200;
-          mimes = [PARSED_JSON_MIME];
+          mimes = [MIME_JSON];
         } else if (_.isArray(status) && _.isString(schema) && _.isNil(mimes) && _.isNil(description)) {
           description = schema;
           mimes = status;
@@ -277,7 +269,7 @@ export default (Module) => {
           schema = status;
           status = 200;
           description = null;
-          mimes = [PARSED_JSON_MIME];
+          mimes = [MIME_JSON];
         } else if (_.isArray(status) && _.isNil(schema) && _.isNil(mimes) && _.isNil(description)) {
           description = null;
           mimes = status;
@@ -299,7 +291,7 @@ export default (Module) => {
           status = 200;
           if (!_.isArray(mimes)) {
             description = mimes;
-            mimes = [PARSED_JSON_MIME];
+            mimes = [MIME_JSON];
           }
         } else if ((status != null) && (schema == null)) {
           if (!_.isArray(mimes)) {
@@ -309,7 +301,7 @@ export default (Module) => {
         } else if ((status != null) && (schema != null)) {
           if (!_.isArray(mimes)) {
             description = mimes;
-            mimes = [PARSED_JSON_MIME];
+            mimes = [MIME_JSON];
           }
         }
         for (const contentType of mimes) {
@@ -352,12 +344,12 @@ export default (Module) => {
         operation.responses[status] = response;
       }
       if (endpointErrors > 0){
-        if (!operation.produces.includes(PARSED_JSON_MIME)) {
-          operation.produces.push(PARSED_JSON_MIME);
+        if (!operation.produces.includes(MIME_JSON)) {
+          operation.produces.push(MIME_JSON);
         }
       }
-      if (!operation.produces.includes('application/json')) {
-        operation.produces.push('application/json');
+      if (!operation.produces.includes(MIME_JSON)) {
+        operation.produces.push(MIME_JSON);
       }
       const endpointPathParams = endpoint.pathParams != null ? endpoint.pathParams : [];
       for (let {name, schema, description} of endpointPathParams) {

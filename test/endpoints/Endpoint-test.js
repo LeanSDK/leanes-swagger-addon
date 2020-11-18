@@ -1,43 +1,50 @@
 const { expect, assert } = require('chai');
 const sinon = require('sinon');
-const SwaggerAddon = require("../../src/index.js").default;
-const LeanES = require('@leansdk/leanes/src/leanes').default;
+const addonPath = process.env.ENV === 'build' ? "../../lib/index.dev" : "../../src/index.js";
+const SwaggerAddon = require(addonPath).default;
+const RestfulAddon = require('@leansdk/leanes-restful-addon/src').default;
+const MapperAddon = require('@leansdk/leanes-mapper-addon/src').default;
+const LeanES = require('@leansdk/leanes/src').default;
 const {
   initialize, partOf, nameBy, meta, constant, plugin,
   Utils: { joi }
 } = LeanES.NS;
 
-describe('Endpoint', () => {
+describe('SwaggerEndpoint', () => {
   describe('.new', () => {
     it('should create new endpoint', () => {
-
       @initialize
       @plugin(SwaggerAddon)
+      @plugin(RestfulAddon)
+      @plugin(MapperAddon)
       class Test extends LeanES {
         @nameBy static __filename = 'Test';
         @meta static object = {};
         @constant ROOT = `${__dirname}/../proxies/config/lib`;
       }
-      const { Endpoint } = Test.NS;
-      const gateway = Test.NS.Gateway.new('TEST_GATEWAY');
-      const endpoint = Endpoint.new({ gateway });
-      assert.instanceOf(endpoint, Endpoint);
+      const { SwaggerEndpoint } = Test.NS;
+      const gateway = Test.NS.SwaggerGateway.new();
+      gateway.setName('TEST_GATEWAY');
+      const endpoint = SwaggerEndpoint.new({ gateway });
+      assert.instanceOf(endpoint, SwaggerEndpoint);
     });
   });
   describe('.tag', () => {
     it('should create endpoint and add tag', () => {
       expect(() => {
-
         @initialize
         @plugin(SwaggerAddon)
+        @plugin(RestfulAddon)
+        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
           @constant ROOT = `${__dirname}/../proxies/config/lib`
         }
-        const { Endpoint } = Test.NS;
-        const gateway = Test.NS.Gateway.new('TEST_GATEWAY');
-        const endpoint = Endpoint.new({ gateway });
+        const { SwaggerEndpoint } = Test.NS;
+        const gateway = Test.NS.SwaggerGateway.new();
+        gateway.setName('TEST_GATEWAY');
+        const endpoint = SwaggerEndpoint.new({ gateway });
         const tag = 'ENDPOINT_TAG';
         assert.notInclude(endpoint.tags != null ? endpoint.tags : [], tag, 'Endpoint already contains tag');
         endpoint.tag(tag);
@@ -51,14 +58,17 @@ describe('Endpoint', () => {
 
         @initialize
         @plugin(SwaggerAddon)
+        @plugin(RestfulAddon)
+        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
           @constant ROOT = `${__dirname}/../proxies/config/lib`;
         }
-        const { Endpoint } = Test.NS;
-        const gateway = Test.NS.new('TEST_GATEWAY');
-        const endpoint = Endpoint.new({ gateway });
+        const { SwaggerEndpoint } = Test.NS;
+        const gateway = Test.NS.SwaggerGateway.new();
+        gateway.setName('TEST_GATEWAY');
+        const endpoint = SwaggerEndpoint.new({ gateway });
         const header = {
           name: 'NAME',
           schema: joi.object(),
@@ -66,7 +76,7 @@ describe('Endpoint', () => {
         };
         assert.notInclude(endpoint.headers != null ? endpoint.headers : [], header, 'Endpoint already contains header');
         endpoint.header(header.name, header.schema, header.description);
-        assert.include(endpoint.headers, headers, 'Endpoint does not contain header');
+        assert.deepInclude(endpoint.headers, header, 'Endpoint does not contain header');
       }).to.not.throw(Error);
     });
   });
@@ -76,22 +86,25 @@ describe('Endpoint', () => {
 
         @initialize
         @plugin(SwaggerAddon)
+        @plugin(RestfulAddon)
+        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
           @constant ROOT = `${__dirname}/../proxies/config/lib`;
         }
-        const { Endpoint } = Test.NS;
-        const gateway = Test.NS.Gateway.new('TEST_GATEWAY');
-        const endpoint = Endpoint.new({ gateway });
-        const oathParam = {
+        const { SwaggerEndpoint } = Test.NS;
+        const gateway = Test.NS.SwaggerGateway.new();
+        gateway.setName('TEST_GATEWAY');
+        const endpoint = SwaggerEndpoint.new({ gateway });
+        const pathParam = {
           name: 'NAME',
           schema: joi.string(),
           description: 'DESCRIPTION'
         };
         assert.notInclude(endpoint.pathParams != null ? endpoint.pathParams : [], pathParam, 'Endpoint already contains pathParam');
         endpoint.pathParam(pathParam.name, pathParam.schema, pathParam.description);
-        assert.include(endpoint.pathParams, pathParam, 'Endpoints does contain pathParam');
+        assert.deepInclude(endpoint.pathParams, pathParam, 'Endpoints does contain pathParam');
       }).to.not.throw(Error);
     });
   });
@@ -101,22 +114,26 @@ describe('Endpoint', () => {
 
         @initialize
         @plugin(SwaggerAddon)
+        @plugin(RestfulAddon)
+        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
           @constant ROOT = `${__dirname}/../proxies/config/lib`;
         }
-        const { Endpoint } = Test.NS;
+        const { SwaggerEndpoint } = Test.NS;
+        const gateway = Test.NS.SwaggerGateway.new();
+        gateway.setName('TEST_GATEWAY');
         const response = {
           status: 200,
           schema: joi.object(),
           mimes: ['text/plain'],
           description: 'DESCRIPTION'
         };
-        const endpoint = Endpoint.new({ gateway });
+        const endpoint = SwaggerEndpoint.new({ gateway });
         assert.notInclude(endpoint.responses != null ? endpoint.responses : [], response, 'Endpoint already contains response');
         endpoint.response(response.status, response.schema, response.mimes, response.description);
-        assert.include(endpoint.responses, response, 'Endpoint does contain response');
+        assert.deepInclude(endpoint.responses, response, 'Endpoint does contain response');
       }).to.not.throw(Error);
     });
   });
@@ -126,14 +143,17 @@ describe('Endpoint', () => {
 
         @initialize
         @plugin(SwaggerAddon)
+        @plugin(RestfulAddon)
+        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
           @constant ROOT = `${__dirname}/../proxies/config/lib`;
         }
-        const { Endpoint } = Test.NS;
-        const gateway = Test.NS.Gateway.new('TEST_GATEWAY');
-        const endpoint = Endpoint.new({ gateway });
+        const { SwaggerEndpoint } = Test.NS;
+        const gateway = Test.NS.SwaggerGateway.new();
+        gateway.setName('TEST_GATEWAY');
+        const endpoint = SwaggerEndpoint.new({ gateway });
         const body = {
           schema: joi.object(),
           mimes: ['text/plain'],
@@ -151,14 +171,17 @@ describe('Endpoint', () => {
 
         @initialize
         @plugin(SwaggerAddon)
+        @plugin(RestfulAddon)
+        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
           @constant ROOT = `${__dirname}/../proxies/config/lib`;
         }
-        const { Endpoint } = Test.NS;
-        const gateway = Test.NS.Gateway.new('TEST_GATEWAY');
-        const endpoint = Endpoint.new({ gateway });
+        const { SwaggerEndpoint } = Test.NS;
+        const gateway = Test.NS.SwaggerGateway.new();
+        gateway.setName('TEST_GATEWAY');
+        const endpoint = SwaggerEndpoint.new({ gateway });
         const summary = 'TEST_SUMMARY';
         assert.notEqual(endpoint.title, summary, 'Endpoint already contains summary');
         endpoint.summary(summary);
@@ -172,18 +195,21 @@ describe('Endpoint', () => {
 
         @initialize
         @plugin(SwaggerAddon)
+        @plugin(RestfulAddon)
+        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
           @constant ROOT = `${__dirname}/../proxies/config/lib`;
         }
-        const { Endpoint } = Test.NS;
-        const gateway = Test.NS.Gateway.new('TEST_GATEWAY');
-        const endpoint = Endpoint.new({ gateway });
+        const { SwaggerEndpoint } = Test.NS;
+        const gateway = Test.NS.SwaggerGateway.new();
+        gateway.setName('TEST_GATEWAY');
+        const endpoint = SwaggerEndpoint.new({ gateway });
         const description = 'TEST_DESCRIPTION';
         assert.notEqual(endpoint.synopsis, description, 'Endpoint already contains descriptions');
         endpoint.description(description);
-        assert.equal(endpoints.synopsis, description, 'Endpoint does not contain description');
+        assert.equal(endpoint.synopsis, description, 'Endpoint does not contain description');
       }).to.not.throw(Error);
     });
   });
@@ -193,18 +219,21 @@ describe('Endpoint', () => {
 
         @initialize
         @plugin(SwaggerAddon)
+        @plugin(RestfulAddon)
+        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
           @constant ROOT = `${__dirname}/../proxies/config/lib`;
         }
-        const { Endpoint } = Test.NS;
-        const gateway = Test.NS.Gateway.new('TEST_GATEWAY');
-        const endpoint = Endpoint.new({ gateway });
+        const { SwaggerEndpoint } = Test.NS;
+        const gateway = Test.NS.SwaggerGateway.new();
+        gateway.setName('TEST_GATEWAY');
+        const endpoint = SwaggerEndpoint.new({ gateway });
         assert.isFalse(endpoint.isDeprecated, 'Endpoint already deprecated');
-        endpoint.deprecated = true;
+        endpoint.deprecated(true);
         assert.isTrue(endpoint.isDeprecated, 'Endpoint is not deprecated');
-        endpoint.deprecated = false;
+        endpoint.deprecated(false);
         assert.isFalse(endpoint.isDeprecated, 'Endpoint is deprecated');
       }).to.not.throw(Error);
     });

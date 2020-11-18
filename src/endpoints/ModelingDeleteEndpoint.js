@@ -21,7 +21,7 @@ export default (Module) => {
     Utils: { statuses, joi }
   } = Module.NS;
 
-  const HTTP_NOT_FOUND = stasuses('not found');
+  const HTTP_NOT_FOUND = statuses('not found');
   const UNAUTHORIZED = statuses('unauthorized');
   const UPGRADE_REQUIRED = statuses('upgrade required');
 

@@ -18,18 +18,18 @@ export default (Module) => {
     SwaggerEndpoint,
     CrudEndpointMixin,
     initialize, mixin, partOf, meta, nameBy,
-    Utils: { stasuses, joi }
+    Utils: { statuses, joi }
   } = Module.NS;
 
-  const HTTP_NOT_FOUND = stasuses('not found');
-  const UNAUTHORIZED = stasuses('unauthorized');
-  const UPGRADE_REQUIRED = stasuses('upgrade required');
+  const HTTP_NOT_FOUND = statuses('not found');
+  const UNAUTHORIZED = statuses('unauthorized');
+  const UPGRADE_REQUIRED = statuses('upgrade required');
 
   @initialize
   @partOf(Module)
   @mixin(CrudEndpointMixin)
   class ModelingDestroyEndpoint extends SwaggerEndpoint {
-    @nameBy static __filename = filename;
+    @nameBy static __filename = __filename;
     @meta static object = {};
 
     constructor() {
