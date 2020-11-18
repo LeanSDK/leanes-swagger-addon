@@ -3,7 +3,6 @@ const sinon = require('sinon');
 const addonPath = process.env.ENV === 'build' ? "../../lib/index.dev" : "../../src/index.js";
 const SwaggerAddon = require(addonPath).default;
 const RestfulAddon = require('@leansdk/leanes-restful-addon/src').default;
-const MapperAddon = require('@leansdk/leanes-mapper-addon/src').default;
 const LeanES = require('@leansdk/leanes/src').default;
 const {
   initialize, partOf, nameBy, meta, constant, plugin,
@@ -16,7 +15,6 @@ describe('SwaggerEndpoint', () => {
       @initialize
       @plugin(SwaggerAddon)
       @plugin(RestfulAddon)
-      @plugin(MapperAddon)
       class Test extends LeanES {
         @nameBy static __filename = 'Test';
         @meta static object = {};
@@ -35,7 +33,6 @@ describe('SwaggerEndpoint', () => {
         @initialize
         @plugin(SwaggerAddon)
         @plugin(RestfulAddon)
-        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
@@ -59,7 +56,6 @@ describe('SwaggerEndpoint', () => {
         @initialize
         @plugin(SwaggerAddon)
         @plugin(RestfulAddon)
-        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
@@ -87,7 +83,6 @@ describe('SwaggerEndpoint', () => {
         @initialize
         @plugin(SwaggerAddon)
         @plugin(RestfulAddon)
-        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
@@ -115,7 +110,6 @@ describe('SwaggerEndpoint', () => {
         @initialize
         @plugin(SwaggerAddon)
         @plugin(RestfulAddon)
-        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
@@ -144,7 +138,6 @@ describe('SwaggerEndpoint', () => {
         @initialize
         @plugin(SwaggerAddon)
         @plugin(RestfulAddon)
-        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
@@ -172,7 +165,6 @@ describe('SwaggerEndpoint', () => {
         @initialize
         @plugin(SwaggerAddon)
         @plugin(RestfulAddon)
-        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
@@ -196,7 +188,6 @@ describe('SwaggerEndpoint', () => {
         @initialize
         @plugin(SwaggerAddon)
         @plugin(RestfulAddon)
-        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
@@ -220,7 +211,6 @@ describe('SwaggerEndpoint', () => {
         @initialize
         @plugin(SwaggerAddon)
         @plugin(RestfulAddon)
-        @plugin(MapperAddon)
         class Test extends LeanES {
           @nameBy static __filename = 'Test';
           @meta static object = {};
