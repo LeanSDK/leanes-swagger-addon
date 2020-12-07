@@ -16,13 +16,13 @@
 export default (Module) => {
   const {
     SWAGGER_ROUTER, SWAGGER_GATEWAY,
-    initializePatch, meta, method,
+    initializeMixin, meta, method,
     Utils: { _ }
   } = Module.NS;
 
-  Module.definePatch(__filename, (BaseClass) => {
-    @initializePatch
-    class Patch extends BaseClass {
+  Module.defineMixin(__filename, (BaseClass) => {
+    @initializeMixin
+    class Mixin extends BaseClass {
       @meta static object = {};
 
       @method initializeFacade(): void {
@@ -32,6 +32,6 @@ export default (Module) => {
         this.addProxy(SWAGGER_GATEWAY, 'SwaggerGateway')
       }
     }
-    return Patch;
+    return Mixin;
   });
 }

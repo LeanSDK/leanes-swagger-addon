@@ -47,7 +47,7 @@ import ModelingQueryEndpoint from './endpoints/ModelingQueryEndpoint';
 import ModelingBulkDeleteEndpoint from './endpoints/ModelingBulkDeleteEndpoint';
 import ModelingBulkDestroyEndpoint from './endpoints/ModelingBulkDestroyEndpoint';
 
-import FacadePatch from './patches/FacadePatch';
+import SwaggerFacadeMixin from './mixins/SwaggerFacadeMixin';
 
 export type { SwaggerEndpointStruct } from './interfaces/SwaggerEndpointStruct';
 export type { SwaggerEndpointInterface } from './interfaces/SwaggerEndpointInterface';
@@ -55,11 +55,13 @@ export type { SwaggerGatewayInterface } from './interfaces/SwaggerGatewayInterfa
 
 export default (Module) => {
   const {
-    initializeMixin, meta, constant, method, patch
+    initializeMixin, meta, constant, method, extend
   } = Module.NS;
 
   return ['SwaggerAddon', (BaseClass) => {
-    @FacadePatch
+    @extend('SwaggerFacadeMixin', 'Facade')
+
+    @SwaggerFacadeMixin
 
     @CreateEndpoint
     @ListEndpoint
@@ -96,10 +98,6 @@ export default (Module) => {
 
       @constant SWAGGER_ROUTER = 'SwaggerRouter';
       @constant SWAGGER_GATEWAY = 'SwaggerGateway';
-
-      @method static including() {
-        patch(this.NS.FacadePatch)(this.NS.Facade);
-      }
     }
     return Mixin;
   }]

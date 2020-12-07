@@ -12,14 +12,13 @@ const appRoot = __dirname + '/src';
 
 const extensions = [".ts", ".js"];
 
-// TODO: needs to improve this config for precompilation src files to nodejs runtime (not browser)
-
 const dev = new Rollup(appRoot, {
   inputFiles: ["**/*.js"],
   annotation: "leanes-swagger-addon",
   rollup: {
     input: __dirname + "/src/index.js",
     external: [
+      'fs', 'path', 'mime-types', 'path-to-regexp', 'joi-to-json-schema',
       'crypto',
       'net',
       'dns',
@@ -91,6 +90,7 @@ const prod = new Rollup(appRoot, {
   rollup: {
     input: __dirname + "/src/index.js",
     external: [
+      'fs', 'path', 'mime-types', 'path-to-regexp', 'joi-to-json-schema',
       'crypto',
       'net',
       'dns',
@@ -111,7 +111,7 @@ const prod = new Rollup(appRoot, {
       }),
       nodeResolve({
         extensions,
-        browser: true,
+        browser: false,
         preferBuiltins: false,
       }),
       commonjs({
@@ -120,7 +120,7 @@ const prod = new Rollup(appRoot, {
       }),
       babel({
         extensions,
-        sourceMap: true,
+        sourceMap: false,
         exclude: "node_modules/**",
         presets: [
           "@babel/preset-env"
