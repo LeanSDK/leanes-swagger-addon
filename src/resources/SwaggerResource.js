@@ -18,7 +18,7 @@ import path from 'path';
 import crypto from 'crypto';
 import mimeTypes from 'mime-types';
 import pathToRegexp from 'path-to-regexp';
-import joiToJsonSchema from 'joi-to-json-schema';
+import { toJson } from 'json-joi-converter';
 
 import type { RouterInterface } from '../interfaces/RouterInterface';
 import type { SwaggerGatewayInterface } from '../interfaces/SwaggerGatewayInterface';
@@ -27,7 +27,8 @@ export default (Module) => {
   const {
     APPLICATION_ROUTER, SWAGGER_GATEWAY,
     Resource,
-    initialize, partOf, nameBy, meta, property, method, action, chains, inject,
+    ConfigurableMixin,
+    initialize, partOf, nameBy, meta, property, method, action, chains, inject, mixin,
     Utils: { _, joi, statuses },
   } = Module.NS;
 
@@ -43,6 +44,7 @@ export default (Module) => {
   @initialize
   @chains(['index', 'spec', 'static'], function () { return; })
   @partOf(Module)
+  @mixin(ConfigurableMixin)
   class SwaggerResource extends Resource {
     @nameBy static __filename = __filename;
     @meta static object = {};
@@ -65,10 +67,12 @@ export default (Module) => {
     }
 
     @action async index() {
+      console.log('dddnnnnnnnn');
       this.context.redirect('swagger/index.html')
     }
 
     @action async 'static'() {
+      console.log('hhhh');
       const urlPart = this.context.url.split('swagger/');
       const [filename] = urlPart.slice(-1);
       const filePath = path.join(__dirname, '..', '..', 'swagger', filename);
@@ -80,6 +84,7 @@ export default (Module) => {
     }
 
     @action async spec() {
+      console.log('JJJ8');
       const {name, description, license, version} = this.configs;
       if (this.constructor.specification == null) {
         this.constructor.specification = {
@@ -97,6 +102,7 @@ export default (Module) => {
           // definitions: swagger.definitions
           paths: this.buildSwaggerPaths()
         };
+        console.log('sdfsdf', this.constructor.specification);
         this.constructor.specEtag = crypto.createHash('sha1').update(JSON.stringify(this.constructor.specification)).digest('hex');
       }
       this.context.etag = this.constructor.specEtag;
@@ -201,7 +207,7 @@ export default (Module) => {
           mimes = [];
         }
         operation.consumes = mimes.slice();
-        schema = schema != null ? schema.isJoi ? schema : schema.schema : null;
+        schema = schema != null ? joi.isSchema(schema) ? schema : schema.schema : null;
         const parameter = schema != null ? this.swaggerifyBody(schema, false) : {
           schema: {
             type: 'string'
@@ -309,9 +315,10 @@ export default (Module) => {
             operation.produces.push(contentType);
           }
         }
-        schema = schema != null ? schema.isJoi ? schema : schema.schema : null;
+        schema = schema != null ? joi.isSchema(schema) ? schema : schema.schema : null;
         const response = {};
         if (mimes.length != null) {
+          console.log('joi2schema 322');
           response.schema = schema != null ? this.joi2schema(schema, false) : {
             type: 'string'
           };
@@ -331,6 +338,7 @@ export default (Module) => {
       }
       const endpointErrors = endpoint.errors != null ? endpoint.errors : [];
       for (const {status, description} of endpointErrors) {
+        console.log('joi2schema 342');
         const response = {
           schema: this.joi2schema(DEFAULT_ERROR_SCHEMA, false)
         };
@@ -480,6 +488,7 @@ export default (Module) => {
 
     @method swaggerifyBody(schema, multiple) {
       const description = schema._description;
+      console.log('joi2schema 492');
       return {
         required: schema._presence === 'required',
         description: description != null ? description : void 0,
@@ -489,9 +498,12 @@ export default (Module) => {
 
     @method joi2schema(schema, multiple) {
       if (multiple) {
-        return joiToJsonSchema(joi.array().items(schema));
+        // return joiToJsonSchema(joi.array().items(schema));
+        return toJson(joi.array().items(schema));
       } else {
-        return joiToJsonSchema(schema);
+        console.log('joi2schema', schema);
+        // return joiToJsonSchema(schema);
+        return toJson(schema);
       }
     }
   }

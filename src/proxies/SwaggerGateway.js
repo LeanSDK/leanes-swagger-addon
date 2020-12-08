@@ -17,13 +17,11 @@ import type { JoiT } from '../types/JoiT';
 import type { SwaggerGatewayInterface } from '../interfaces/SwaggerGatewayInterface';
 import type { SwaggerEndpointInterface } from '../interfaces/SwaggerEndpointInterface';
 
-const indexOf = [].indexOf;
-
 export default (Module) => {
   const {
     Proxy,
     initialize, partOf, meta, property, method, nameBy,
-    Utils: { inflect, assign }
+    Utils: { inflect, assign, filesListSync }
   } = Module.NS;
 
   @initialize
@@ -40,17 +38,8 @@ export default (Module) => {
       return `${this.ApplicationModule.NS.ROOT}/endpoints`;
     }
 
-    @method tryLoadEndpoint(asName: string): ?Class<*> {
-      if (indexOf.call(this._knownEndpoints, asName) >= 0) {
-        const vsEndpointPath = `${this._endpointsPath}/${asName}`;
-        try {
-          return require(vsEndpointPath)(this.ApplicationModule);
-        } catch (error) {}
-      }
-    }
-
     @method getEndpointByName(asName: string): ?Class<*> {
-      return this.ApplicationModule.NS[asName] || this.tryLoadEndpoint(asName);
+      return this.ApplicationModule.prototype[asName];
     }
 
     @method getEndpointName(asResourse: string, asAction: string): string {
@@ -62,7 +51,7 @@ export default (Module) => {
 
     @method getStandardActionEndpoint(asResourse: string, asAction: string): Class<*> {
       const vsEndpointName = `${inflect.camelize(asAction)}Endpoint`;
-      return this.ApplicationModule.NS[vsEndpointName] || this.ApplicationModule.NS.Endpoint;
+      return this.ApplicationModule.prototype[vsEndpointName] || this.ApplicationModule.NS.Endpoint;
     }
 
     @method getEndpoint(asResourse: string, asAction: string): Class<*> {

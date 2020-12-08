@@ -18,7 +18,7 @@ const dev = new Rollup(appRoot, {
   rollup: {
     input: __dirname + "/src/index.js",
     external: [
-      'fs', 'path', 'mime-types', 'path-to-regexp', 'joi-to-json-schema',
+      'fs', 'path', 'mime-types', 'path-to-regexp', 'json-joi-converter',
       'crypto',
       'net',
       'dns',
@@ -90,7 +90,7 @@ const prod = new Rollup(appRoot, {
   rollup: {
     input: __dirname + "/src/index.js",
     external: [
-      'fs', 'path', 'mime-types', 'path-to-regexp', 'joi-to-json-schema',
+      'fs', 'path', 'mime-types', 'path-to-regexp', 'json-joi-converter',
       'crypto',
       'net',
       'dns',
