@@ -21,7 +21,7 @@ export default (Module) => {
   const {
     Proxy,
     initialize, partOf, meta, property, method, nameBy,
-    Utils: { inflect, assign, filesListSync }
+    Utils: { inflect, assign }
   } = Module.NS;
 
   @initialize
@@ -30,9 +30,7 @@ export default (Module) => {
     @nameBy static  __filename = __filename;
     @meta static object = {};
 
-    @property _knownEndpoints: string[] = null;
-
-    @property _schemas: {[key: string]: ?JoiT} = null;
+    @property _schemas: {[key: string]: ?JoiT} = {};
 
     @property get _endpointsPath(): string {
       return `${this.ApplicationModule.NS.ROOT}/endpoints`;
@@ -72,22 +70,6 @@ export default (Module) => {
         this._schemas[asRecordName] = this.ApplicationModule.NS[asRecordName].schema;
       }
       return this._schemas[asRecordName];
-    }
-
-    constructor() {
-      super(... arguments);
-      this._schemas = {};
-      const vPostfixMask = /\.js$/;
-      const vlKnownEndpoints = (()=> {
-        try {
-          return filesListSync(this._endpointsPath);
-        } catch (error) {}
-      })();
-      this._knownEndpoints = vlKnownEndpoints != null ? vlKnownEndpoints.filter((asFileName) =>
-        vPostfixMask.test(asFileName)
-      ).map((asFileName) =>
-        asFileName.replace(vPostfixMask, '')
-      ) : [];
     }
   }
 }
