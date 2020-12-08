@@ -59,7 +59,7 @@ export default (Module) => {
   } = Module.NS;
 
   return ['SwaggerAddon', (BaseClass) => {
-    @extend('SwaggerFacadeMixin', 'Facade')
+    return @extend('SwaggerFacadeMixin', 'Facade')
 
     @SwaggerFacadeMixin
 
@@ -99,6 +99,5 @@ export default (Module) => {
       @constant SWAGGER_ROUTER = 'SwaggerRouter';
       @constant SWAGGER_GATEWAY = 'SwaggerGateway';
     }
-    return Mixin;
   }]
 }
