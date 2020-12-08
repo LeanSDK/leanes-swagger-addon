@@ -19,8 +19,6 @@ import type { SwaggerEndpointStruct } from './SwaggerEndpointStruct';
 export interface SwaggerGatewayInterface<
   Endpoint = SwaggerEndpointStruct
 > {
-  tryLoadEndpoint(asName: string): ?Class<*>;
-
   getEndpointByName(asName: string): ?Class<*>;
 
   getEndpointName(asResourse: string, asAction: string): string;
