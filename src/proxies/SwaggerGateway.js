@@ -37,7 +37,9 @@ export default (Module) => {
     }
 
     @method getEndpointByName(asName: string): ?Class<*> {
-      return this.ApplicationModule.prototype[asName];
+      try {
+        return this.ApplicationModule.NS[asName];
+      } catch (e) {}
     }
 
     @method getEndpointName(asResourse: string, asAction: string): string {
@@ -49,7 +51,7 @@ export default (Module) => {
 
     @method getStandardActionEndpoint(asResourse: string, asAction: string): Class<*> {
       const vsEndpointName = `${inflect.camelize(asAction)}Endpoint`;
-      return this.ApplicationModule.prototype[vsEndpointName] || this.ApplicationModule.NS.SwaggerEndpoint;
+      return this.getEndpointByName(vsEndpointName) || this.ApplicationModule.NS.SwaggerEndpoint;
     }
 
     @method getEndpoint(asResourse: string, asAction: string): Class<*> {

@@ -32,6 +32,8 @@ export default (Module) => {
     Utils: { _, joi, statuses },
   } = Module.NS;
 
+  const MOVED = statuses('Moved Permanently');
+
   const DEFAULT_ERROR_SCHEMA = joi.object().keys({
     error: joi.allow(true).required(),
     errorNum: joi.number().integer().optional(),
@@ -48,7 +50,7 @@ export default (Module) => {
   class SwaggerResource extends Resource {
     @nameBy static __filename = __filename;
     @meta static object = {};
-    // @property entityName = 'TestEntity';
+
     @property static specification: ?object = null;
     @property static specEtag: string = null;
 
@@ -67,12 +69,11 @@ export default (Module) => {
     }
 
     @action async index() {
-      console.log('dddnnnnnnnn');
-      this.context.redirect('swagger/index.html')
+      this.context.status = MOVED
+      this.context.redirect('/swagger/index.html')
     }
 
     @action async 'static'() {
-      console.log('hhhh');
       const urlPart = this.context.url.split('swagger/');
       const [filename] = urlPart.slice(-1);
       const filePath = path.join(__dirname, '..', '..', 'swagger', filename);
@@ -144,7 +145,7 @@ export default (Module) => {
         const keys = [];
         const re = pathToRegexp(path, keys);
         for (const key of keys) {
-          endpoint.pathParam(key.name === 0 ? '*' : key.name);
+          endpoint.pathParam(key.name === 0 ? '*' : key.name, joi.string());
         }
         if (resourceTag != null) {
           endpoint.tag(resourceTag);
@@ -184,7 +185,6 @@ export default (Module) => {
         let {schema, mimes, description} = endpoint.payload;
         if (!_.isArray(schema) && _.isObject(schema) && _.isArray(mimes) && _.isString(description)) {
 
-        //{ schema, mimes, description } = { schema, mimes, description }
         } else if (!_.isArray(schema) && _.isObject(schema) && _.isString(mimes)) {
           description = mimes;
           mimes = [MIME_JSON];
@@ -230,7 +230,6 @@ export default (Module) => {
       for (let {status, schema, mimes, description} of endpointResponses) {
         if ((_.isNumber(status) || _.isString(status)) && (!_.isArray(schema) && _.isObject(schema)) && _.isArray(mimes) && _.isString(description)) {
 
-        // { status, schema, mimes, description } = { status, schema, mimes, description }
         } else if ((_.isNumber(status) || _.isString(status)) && (!_.isArray(schema) && _.isObject(schema)) && _.isString(mimes) && _.isNil(description)) {
           description = mimes;
           mimes = [MIME_JSON];
@@ -318,7 +317,6 @@ export default (Module) => {
         schema = schema != null ? joi.isSchema(schema) ? schema : schema.schema : null;
         const response = {};
         if (mimes.length != null) {
-          console.log('joi2schema 322');
           response.schema = schema != null ? this.joi2schema(schema, false) : {
             type: 'string'
           };
@@ -338,7 +336,6 @@ export default (Module) => {
       }
       const endpointErrors = endpoint.errors != null ? endpoint.errors : [];
       for (const {status, description} of endpointErrors) {
-        console.log('joi2schema 342');
         const response = {
           schema: this.joi2schema(DEFAULT_ERROR_SCHEMA, false)
         };
@@ -368,7 +365,7 @@ export default (Module) => {
         if (_.some(operation.parameters, {name})) {
           continue;
         }
-        const parameter = schema != null ? this.swaggerifyParam(schema.isJoi ? schema : joi.object(schema)) : {
+        const parameter = schema != null ? this.swaggerifyParam(joi.isSchema(schema) ? schema : joi.object(schema)) : {
           type: 'string'
         };
         parameter.name = name;
@@ -388,7 +385,7 @@ export default (Module) => {
         if (_.some(operation.parameters, {name})) {
           continue;
         }
-        const parameter = schema != null ? this.swaggerifyParam(schema.isJoi ? schema : joi.object(schema)) : {
+        const parameter = schema != null ? this.swaggerifyParam(joi.isSchema(schema) ? schema : joi.object(schema)) : {
           type: 'string'
         };
         parameter.name = name;
@@ -407,7 +404,7 @@ export default (Module) => {
         if (_.some(operation.parameters, {name})) {
           continue;
         }
-        const parameter = schema != null ? this.swaggerifyParam(schema.isJoi ? schema : joi.object(schema)) : {
+        const parameter = schema != null ? this.swaggerifyParam(joi.isSchema(schema) ? schema : joi.object(schema)) : {
           type: 'string'
         };
         parameter.name = name;
@@ -444,13 +441,13 @@ export default (Module) => {
         case 'object':
           return ['object'];
         case 'string':
-          if (schema._meta.some(function(meta) {
-            return meta.secret;
-          })) {
-            return ['string', 'password'];
-          } else {
+          // if (schema._meta.some(function(meta) {
+          //   return meta.secret;
+          // })) {
+          //   return ['string', 'password'];
+          // } else {
             return ['string'];
-          }
+          // }
           break;
         default:
           return ['string'];
@@ -464,20 +461,20 @@ export default (Module) => {
         description: description != null ? description : void 0
       };
       let item = param;
-      if (schema._meta.some(function(meta) {
-        return meta.allowMultiple;
-      })) {
-        param.type = 'array';
-        param.collectionFormat = 'multi';
-        param.items = {};
-        item = param.items;
-      }
+      // if (schema._meta.some(function(meta) {
+      //   return meta.allowMultiple;
+      // })) {
+      //   param.type = 'array';
+      //   param.collectionFormat = 'multi';
+      //   param.items = {};
+      //   item = param.items;
+      // }
       const type = this.swaggerifyType(schema);
       item.type = type[0];
       if (type.length > 1) {
         item.format = type[1];
       }
-      if (schema._valids._set && schema._valids._set.length) {
+      if (schema._valids && schema._valids._set && schema._valids._set.length) {
         item.enum = schema._valids._set;
       }
       if ('default' in schema._flags) {
@@ -488,7 +485,6 @@ export default (Module) => {
 
     @method swaggerifyBody(schema, multiple) {
       const description = schema._description;
-      console.log('joi2schema 492');
       return {
         required: schema._presence === 'required',
         description: description != null ? description : void 0,
@@ -498,11 +494,8 @@ export default (Module) => {
 
     @method joi2schema(schema, multiple) {
       if (multiple) {
-        // return joiToJsonSchema(joi.array().items(schema));
         return toJson(joi.array().items(schema));
       } else {
-        console.log('joi2schema', schema);
-        // return joiToJsonSchema(schema);
         return toJson(schema);
       }
     }

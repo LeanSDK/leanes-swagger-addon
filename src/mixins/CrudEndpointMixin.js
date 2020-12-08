@@ -23,7 +23,7 @@ export default (Module) => {
   } = Module.NS;
 
   Module.defineMixin(__filename, (BaseClass) => {
-    @initializeMixin
+    return @initializeMixin
     class Mixin extends BaseClass {
       @meta static object = {};
 
@@ -136,6 +136,5 @@ export default (Module) => {
         }
       }
     }
-    return Mixin;
   });
 }
