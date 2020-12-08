@@ -33,7 +33,7 @@ export default (Module) => {
 
     constructor() {
       super(...arguments);
-      this.pathParam('v', this.versionShema)
+      this.pathParam('v', this.versionSchema)
         .queryParam('query', this.querySchema, `
           The query for counting
           ${this.listEntityName}.

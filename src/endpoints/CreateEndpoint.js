@@ -34,7 +34,7 @@ export default (Module) => {
 
     constructor() {
       super(...arguments);
-      this.pathParam('v', this.versionShema)
+      this.pathParam('v', this.versionSchema)
         .body(this.itemSchema.required(), `
           The ${this.itemEntityName} to create.
         `)

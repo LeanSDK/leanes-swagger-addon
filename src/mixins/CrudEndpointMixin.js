@@ -89,7 +89,7 @@ export default (Module) => {
       }
 
       @property get querySchema(): JoiT {
-        return joi.string().empty('{}').optional().default('{}', 'The query for finding objects.');
+        return joi.string().empty('{}').optional().default('{}');
       }
 
       @property get executeQuerySchema(): JoiT {

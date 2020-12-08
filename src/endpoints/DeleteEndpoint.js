@@ -34,7 +34,7 @@ export default (Module) => {
 
     constructor() {
       super(...arguments);
-      this.pathParam('v', this.versionShema)
+      this.pathParam('v', this.versionSchema)
         .error(HTTP_NOT_FOUND)
         .error(UNAUTHORIZED)
         .error(UPGRADE_REQUIRED)
