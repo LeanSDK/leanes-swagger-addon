@@ -76,7 +76,7 @@ export default (Module) => {
     @action async 'static'() {
       const urlPart = this.context.url.split('swagger/');
       const [filename] = urlPart.slice(-1);
-      const filePath = path.join(__dirname, '..', '..', 'swagger', filename);
+      const filePath = path.join(__dirname, '..', 'swagger', filename);
       this.context.status = 200;
       this.context.respond = false;
       this.context.type = mimeTypes.lookup(filename);
