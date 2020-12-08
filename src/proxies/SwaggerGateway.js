@@ -49,7 +49,7 @@ export default (Module) => {
 
     @method getStandardActionEndpoint(asResourse: string, asAction: string): Class<*> {
       const vsEndpointName = `${inflect.camelize(asAction)}Endpoint`;
-      return this.ApplicationModule.prototype[vsEndpointName] || this.ApplicationModule.NS.Endpoint;
+      return this.ApplicationModule.prototype[vsEndpointName] || this.ApplicationModule.NS.SwaggerEndpoint;
     }
 
     @method getEndpoint(asResourse: string, asAction: string): Class<*> {
