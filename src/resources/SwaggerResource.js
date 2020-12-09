@@ -25,7 +25,7 @@ import type { SwaggerGatewayInterface } from '../interfaces/SwaggerGatewayInterf
 
 export default (Module) => {
   const {
-    APPLICATION_ROUTER, SWAGGER_GATEWAY,
+    APPLICATION_ROUTER, SWAGGER_GATEWAY, NON_RENDERABLE,
     Resource,
     ConfigurableMixin,
     initialize, partOf, nameBy, meta, property, method, action, chains, inject, mixin,
@@ -71,6 +71,7 @@ export default (Module) => {
     @action async index() {
       this.context.status = MOVED
       this.context.redirect('/swagger/index.html')
+      return NON_RENDERABLE
     }
 
     @action async 'static'() {
@@ -82,10 +83,10 @@ export default (Module) => {
       this.context.type = mimeTypes.lookup(filename);
       const file = fs.createReadStream(filePath);
       file.pipe(this.context.res);
+      return NON_RENDERABLE
     }
 
     @action async spec() {
-      console.log('JJJ8');
       const {name, description, license, version} = this.configs;
       if (this.constructor.specification == null) {
         this.constructor.specification = {

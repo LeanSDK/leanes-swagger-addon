@@ -53,6 +53,7 @@ var _default = Module => {
   const {
     APPLICATION_ROUTER,
     SWAGGER_GATEWAY,
+    NON_RENDERABLE,
     Resource,
     ConfigurableMixin,
     initialize,
@@ -99,6 +100,7 @@ var _default = Module => {
     async index() {
       this.context.status = MOVED;
       this.context.redirect('/swagger/index.html');
+      return NON_RENDERABLE;
     }
 
     async 'static'() {
@@ -114,10 +116,10 @@ var _default = Module => {
       const file = _fs.default.createReadStream(filePath);
 
       file.pipe(this.context.res);
+      return NON_RENDERABLE;
     }
 
     async spec() {
-      console.log('JJJ8');
       const {
         name,
         description,
