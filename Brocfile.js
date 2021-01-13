@@ -1,98 +1,57 @@
 
-// Brocfile.js
-const funnel = require('broccoli-funnel');
+
 const mergeTrees = require('broccoli-merge-trees');
-const Rollup = require("broccoli-rollup");
-const babel = require("rollup-plugin-babel");
-const nodeResolve = require('rollup-plugin-node-resolve');
-const commonjs = require('rollup-plugin-commonjs');
-const json = require('rollup-plugin-json');
-// const globals = require('rollup-plugin-node-globals');
+const esTranspiler = require('broccoli-babel-transpiler');
 
 const appRoot = __dirname + '/src';
 
-const extensions = [".ts", ".js"];
-
-// Compile JS through rollup
-let js = new Rollup(appRoot, {
-  inputFiles: ["**/*.js"],
-  annotation: "JS Transformation",
-  rollup: {
-    input: __dirname + "/src/leanes/index.js",
-    external: [
-      'crypto',
-      'net',
-      'dns',
-      'stream',
-      'buffer',
-      'events',
-      'querystring',
-      'url'
-    ],
-    plugins: [
-      json({
-        extensions,
-        include: 'node_modules/**',
-        preferConst: true, // Default: false
-        indent: '  ',
-        compact: true, // Default: false
-        namedExports: true // Default: true
-      }),
-      nodeResolve({
-        extensions,
-        browser: true,
-        preferBuiltins: false,
-      }),
-      commonjs({
-        include: 'node_modules/**',
-        preferBuiltins: false
-      }),
-      babel({
-        extensions,
-        sourceMap: true,
-        babelrcRoots: [
-          "./src/**",
-        ],
-        exclude: "node_modules/**",
-        presets: [
-          "@babel/preset-env"
-        ],
-        plugins: [
-          "@babel/plugin-syntax-flow",
-          "flow-runtime",
-          "@babel/plugin-transform-flow-strip-types",
-          ["@babel/plugin-proposal-decorators", { "legacy": true }],
-          ["@babel/plugin-proposal-class-properties", { "loose": true }],
-          'transform-class-properties',
-          // "transform-dirname-filename",
-          // ["transform-globals", {
-          //   replace: {__filename: "filename"},
-          // }]
-        ],
-      }),
-      // globals({
-      //   include: __dirname + "/lib/**",
-      //   sourceMap: true,
-      //   process: false,
-      //   buffer: false,
-      //   dirname: true,
-      //   filename: true,
-      //   global: true,
-      //   baseDir: process.cwd()
-      // }),
-    ],
-    output: {
-      // name: "LeanES",
-      // format: "umd",
-      dir: __dirname + '/lib',
-      format: "cjs",
-      sourcemap: true,
-    },
-  }
+const dev = esTranspiler(appRoot, {
+  filterExtensions: ["js"],
+  browserPolyfill: false,
+  sourceMap: 'inline',
+  exclude: "node_modules/**",
+  presets: [
+    ["@babel/preset-env", {targets: {node: '14.9'}, loose: true, useBuiltIns: false}]
+  ],
+  plugins: [
+    "@babel/plugin-syntax-flow",
+    ["flow-runtime", {
+      "assert": true,
+      "annotate": true
+    }],
+    "@babel/plugin-transform-flow-strip-types",
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    "babel-plugin-parameter-decorator",
+    ["@babel/plugin-proposal-class-properties", { "loose": true }],
+    "@babel/plugin-transform-runtime",
+  ],
 });
 
+const prod = esTranspiler(appRoot, {
+  filterExtensions: ["js"],
+  browserPolyfill: false,
+  exclude: "node_modules/**",
+  presets: [
+    ["@babel/preset-env", {targets: {node: '14.9'}, loose: true, useBuiltIns: false}]
+  ],
+  plugins: [
+    "@babel/plugin-syntax-flow",
+    ["flow-runtime", {
+      "assert": false,
+      "annotate": false
+    }],
+    "@babel/plugin-transform-flow-strip-types",
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    "babel-plugin-parameter-decorator",
+    ["@babel/plugin-proposal-class-properties", { "loose": true }],
+    "@babel/plugin-transform-runtime",
+  ],
+});
 
-// Remove the existing module.exports and replace with:
-let tree = mergeTrees([js], { annotation: "Final output" });
-
-module.exports = tree;
+module.exports = options => {
+  if (options.env == 'production') {
+    return mergeTrees([prod], { annotation: "Final output", overwrite: true });
+  } else if (options.env == 'development') {
+    return mergeTrees([dev], { annotation: "Final output", overwrite: true });
+  }
+};
